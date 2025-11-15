@@ -14,7 +14,7 @@ AUTHOR_REF_AUDIO="$3"
 ANCHOR_IMG="assets/anchor.png"
 ANCHOR_REF_AUDIO="assets/LJ001-0001.wav"
 
-# echo
+echo
 
 
 
@@ -49,7 +49,10 @@ conda run -n sadtalker python3 VisualModel/SadTalker/inference.py \
     --enhancer gfpgan \
     --result_dir assets/video \
     --checkpoint_dir VisualModel/SadTalker/checkpoints \
-    
+
+ANCHOR_VIDEO=$(ls -t assets/video/*.mp4 | head -n 1)
+echo "ANCHOR VIDEO = $ANCHOR_VIDEO
+
 conda run -n sadtalker python3 VisualModel/SadTalker/inference.py \
     --driven_audio assets/audio/author_full_audio.wav \
     --source_image $AUTHOR_IMG \
@@ -57,16 +60,15 @@ conda run -n sadtalker python3 VisualModel/SadTalker/inference.py \
     --result_dir assets/video/ \
     --checkpoint_dir VisualModel/SadTalker/checkpoints \
     
-#trim the filename extension from images
-ANCHOR_BASENAME="${ANCHOR_IMG##*/}"   
-ANCHOR_NAME="${ANCHOR_BASENAME%.*}"  
-AUTHOR_BASENAME="${AUTHOR_IMG##*/}"
-AUTHOR_NAME="${AUTHOR_BASENAME%.*}"
+AUTHOR_VIDEO=$(ls -t assets/video/*.mp4 | head -n 1)
+echo "AUTHOR VIDEO = $AUTHOR_VIDEO"
+
 ARTICLE_BASENAME="${ARTICLE##*/}"
 ARTICLE_NAME="${ARTICLE_BASENAME%.*}"
+
 ffmpeg \
-  -i assets/video/${ANCHOR_NAME}##anchor_full_audio.mp4 \
-  -i assets/video/${AUTHOR_NAME}##author_full_audio.mp4 \
+  -i "$ANCHOR_VIDEO" \
+  -i "$AUTHOR_VIDEO" \
   -filter_complex "[0:v]setpts=PTS-STARTPTS[left]; [1:v]setpts=PTS-STARTPTS[right]; [left][right]hstack=inputs=2[v]" \
   -map "[v]" \
   -filter_complex "[0:a][1:a]amix=inputs=2:duration=first:dropout_transition=0[a]" \
@@ -74,6 +76,8 @@ ffmpeg \
   -c:v libx264 -preset veryfast -crf 18 \
   -c:a aac -b:a 192k \
   assets/video/${ARTICLE_NAME}_podcast.mp4
+
+
 
 echo "videos done"
 echo
