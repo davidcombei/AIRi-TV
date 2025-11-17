@@ -35,7 +35,8 @@ Try to discuss a little bit about the results presented in the tables of the art
 Make the first part of the entry utterance using: Good day everyone, welcome to our show. Today we have with us [Author's Name], the author of the article. Thank you for joining us.
 Make sure that the closing is natural, not leaving a question in the air.
 Make sure that there are only replies from the ANCHOR and AUTHOR, no other speakers or sentences added.
-Very important: The number of turns for each participant should be equal(e.g., if the ANCHOR has 10 turns, the AUTHOR should also have 10 turns).
+VERY IMPORTANT: THE NR OF TURNS SHOULD BE EQUAL FOR BOTH ANCHOR AND AUTHOR.
+DO NOT GENERATE ANYTHING ELSE. ONLY PROVIDE THE CONVERSATION WITH THE ANNOTATIONS.
 Here is the
 ARTICLE:
 
