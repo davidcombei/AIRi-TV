@@ -21,6 +21,7 @@ mkdir assets/audio/
 mkdir assets/video/
 
 conda create -yn  backgrounds python==3.11.14
+conda activate backgrounds
 pip install rembg onnxruntime "numpy<2.0" torch
 conda deactivate backgrounds
 
