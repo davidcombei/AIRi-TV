@@ -1,0 +1,31 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# fisiere generate accidental
+00:*
+
+# SadTalker models
+VisualModel/SadTalker/checkpoints/
+VisualModel/SadTalker/gfpgan/
+
+# Sterse din assets : 
+assets/anchor.wav
+assets/author.wav
+assets/audio
+assets/video
+assets/subtitles
+
+# Sterse alte foldere : 
+
+gfpgan/
+
+
+# Outputuri de la hallo2 : 
+VisualModel/hallo2/outputs/
+
+# Fisierele de tip zip : 
+*.zip
+
+#Fisierele de la hallo : 
+VisualModel/hallo2/

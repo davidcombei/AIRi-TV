@@ -49,7 +49,7 @@ def main():
         author_wav, _  = read_wav(os.path.join(audio_dir, u_file))
 
     
-        rand_sil = random.uniform(1.0, 2.0)
+        rand_sil = 0.3
 
 
         anchor_final.append(anchor_wav)

@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-export CUDA_VISIBLE_DEVICES=0
+export CUDA_VISIBLE_DEVICES=1
 
 if [ "$#" -ne 3 ]; then
     echo "Usage: $0 <article.pdf> <author_image.png> <author_reference.wav>"
@@ -13,8 +13,7 @@ AUTHOR_IMG="$2"
 AUTHOR_REF_AUDIO="$3"
 
 
-ANCHOR_REF_AUDIO="assets/LJ001-0001.wav"
-
+ANCHOR_REF_AUDIO="assets/anchor.wav"
 
 
 conda run -n backgrounds python3 remove_background.py \
@@ -81,25 +80,40 @@ ARTICLE_NAME="${ARTICLE_BASENAME%.*}"
 ffmpeg \
   -i "$ANCHOR_VIDEO" \
   -i "$AUTHOR_VIDEO" \
-  -filter_complex "[0:v]setpts=PTS-STARTPTS[left]; [1:v]setpts=PTS-STARTPTS[right]; [left][right]hstack=inputs=2[v]" \
+  -filter_complex "\
+    [0:v]setpts=PTS-STARTPTS[left]; \
+    [1:v]setpts=PTS-STARTPTS[right]; \
+    [left][right]hstack=inputs=2[v]; \
+    [0:a][1:a]amix=inputs=2:duration=first:dropout_transition=0[a]" \
   -map "[v]" \
-  -filter_complex "[0:a][1:a]amix=inputs=2:duration=first:dropout_transition=0[a]" \
   -map "[a]" \
   -c:v libx264 -preset veryfast -crf 18 \
   -c:a aac -b:a 192k \
-  assets/video/${ARTICLE_NAME}_podcast.mp4
+  "assets/video/${ARTICLE_NAME}_podcast.mp4"
+
 
   echo "merging done"
   echo "adding background and logo to video"
 
   conda run -n backgrounds python3 add_background_video.py \
     "assets/video/${ARTICLE_NAME}_podcast.mp4" \
-    "assets/video/${ARTICLE_NAME}_podcast.mp4" \
+    "assets/video/${ARTICLE_NAME}_podcast_background.mp4" \
     "assets/background.jpg" \
     "assets/airi_logo.jpeg"
-    
 
-echo "videos done, saved to assets/video/${ARTICLE_NAME}_podcast.mp4"
-echo
+
+  conda run -n subtitles python3 Subtitles/subtitles.py \
+    "assets/video/${ARTICLE_NAME}_podcast_background.mp4"
+
+
+  conda run -n subtitles python3 Subtitles/burn_subtitles.py \
+    "assets/video/${ARTICLE_NAME}_podcast_background.mp4" \
+    "assets/subtitles/subtitles.srt" \
+    --font-size 24 \
+    --bottom-margin 20
+
+  
+
+echo "videos done, all being saved to ./assets/video"
 
 

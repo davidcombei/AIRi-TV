@@ -2,9 +2,37 @@ from vllm import LLM, SamplingParams
 from pypdf import PdfReader
 import argparse
 import os
+
+
 def extract_pdf(path):
     reader = PdfReader(path)
-    return "\n".join(page.extract_text() for page in reader.pages)
+    return "\n".join(page.extract_text() for page in reader.pages if page.extract_text())
+
+
+# 🔒 ADAUGARE MINIMA – GARANTEAZA #ANCHOR == #AUTHOR
+def enforce_equal_turns(text: str) -> str:
+    lines = [l for l in text.splitlines() if l.strip()]
+
+    anchor_lines = [l for l in lines if l.startswith("[ANCHOR]")]
+    author_lines = [l for l in lines if l.startswith("[AUTHOR]")]
+
+    n = min(len(anchor_lines), len(author_lines))
+
+    fixed_lines = []
+    a_i = u_i = 0
+
+    for line in lines:
+        if line.startswith("[ANCHOR]") and a_i < n:
+            fixed_lines.append(line)
+            a_i += 1
+        elif line.startswith("[AUTHOR]") and u_i < n:
+            fixed_lines.append(line)
+            u_i += 1
+
+        if a_i == n and u_i == n:
+            break
+
+    return "\n".join(fixed_lines)
 
 
 parser = argparse.ArgumentParser(description="Generate podcast conversation from PDF")
@@ -50,7 +78,6 @@ llm = LLM(
     model="meta-llama/Meta-Llama-3.1-8B-Instruct",
     dtype="bfloat16",
     tensor_parallel_size=1,
-    #enable_torch_compile=False,
 )
 
 params = SamplingParams(
@@ -60,8 +87,15 @@ params = SamplingParams(
 )
 
 resp = llm.generate(prompt, params)
-generated_text = resp[0].outputs[0].text
-print(resp[0].outputs[0].text)
 
-with open(os.path.join(output_dir,"conversation.txt"), "w", encoding="utf-8") as f:
+generated_text = resp[0].outputs[0].text
+
+# 🔒 AICI SE GARANTEAZA EGALITATEA
+generated_text = enforce_equal_turns(generated_text)
+
+print(generated_text)
+
+os.makedirs(output_dir, exist_ok=True)
+with open(os.path.join(output_dir, "conversation.txt"), "w", encoding="utf-8") as f:
     f.write(generated_text)
+
