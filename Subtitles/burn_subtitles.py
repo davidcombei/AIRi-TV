@@ -67,7 +67,7 @@ def main():
         default_dir = default_dir.resolve()
         default_dir.mkdir(parents=True, exist_ok=True)
 
-        out_path = default_dir / f"{Path(in_video).stem}_burned.mp4"
+        out_path = default_dir / f"{Path(in_video).stem}_subtitles.mp4"
 
     out_path = os.path.abspath(out_path)
 

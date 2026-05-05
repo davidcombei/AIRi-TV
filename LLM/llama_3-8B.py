@@ -39,9 +39,13 @@ parser = argparse.ArgumentParser(description="Generate podcast conversation from
 parser.add_argument("article_path", type=str, help="Path to the article PDF")
 parser.add_argument("converstation_output", type=str, help="Directory where conversation.txt will be saved")
 
+
+
 args = parser.parse_args()
 pdf_path = args.article_path
 output_dir = args.converstation_output
+
+
 
 article_text = extract_pdf(pdf_path)
 

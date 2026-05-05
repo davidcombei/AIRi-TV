@@ -1,0 +1,119 @@
+[
+  {
+    "image": "page2_img1.png",
+    "interval": {
+      "start": 31.94,
+      "end": 44.52,
+      "segments": [
+        {
+          "id": 10,
+          "start": 31.94,
+          "end": 34.82,
+          "text": "I think a strong foundation in mathematics and programming,"
+        },
+        {
+          "id": 11,
+          "start": 35.2,
+          "end": 39.02,
+          "text": "particularly in languages like Python or C++, is essential."
+        },
+        {
+          "id": 12,
+          "start": 39.42,
+          "end": 44.52,
+          "text": "Also, having a good understanding of signal processing and machine learning concepts is crucial."
+        }
+      ]
+    }
+  },
+  {
+    "image": "page2_img0.png",
+    "interval": {
+      "start": 31.94,
+      "end": 44.52,
+      "segments": [
+        {
+          "id": 10,
+          "start": 31.94,
+          "end": 34.82,
+          "text": "I think a strong foundation in mathematics and programming,"
+        },
+        {
+          "id": 11,
+          "start": 35.2,
+          "end": 39.02,
+          "text": "particularly in languages like Python or C++, is essential."
+        },
+        {
+          "id": 12,
+          "start": 39.42,
+          "end": 44.52,
+          "text": "Also, having a good understanding of signal processing and machine learning concepts is crucial."
+        }
+      ]
+    }
+  },
+  {
+    "image": "page2_img2.png",
+    "interval": {
+      "start": 7.02,
+      "end": 44.52,
+      "segments": [
+        {
+          "id": 4,
+          "start": 7.02,
+          "end": 10.04,
+          "text": "So, Adriana, you wrote an article about detecting fake audio."
+        },
+        {
+          "id": 5,
+          "start": 10.48,
+          "end": 14.42,
+          "text": "What kind of jobs or careers can someone pursue with a background in audio or speech processing?"
+        },
+        {
+          "id": 6,
+          "start": 15.02,
+          "end": 19.48,
+          "text": "Well, there are many fields, but some popular ones include working in audio or speech recognition,"
+        },
+        {
+          "id": 7,
+          "start": 19.9,
+          "end": 22.64,
+          "text": "natural language processing, or even in the music industry."
+        },
+        {
+          "id": 8,
+          "start": 23.2,
+          "end": 26.06,
+          "text": "You could also consider roles in cyber security or data science."
+        },
+        {
+          "id": 9,
+          "start": 26.06,
+          "end": 31.22,
+          "text": "That's really cool. What skills do you think are most important for someone to have in order to work in these areas?"
+        },
+        {
+          "id": 10,
+          "start": 31.94,
+          "end": 34.82,
+          "text": "I think a strong foundation in mathematics and programming,"
+        },
+        {
+          "id": 11,
+          "start": 35.2,
+          "end": 39.02,
+          "text": "particularly in languages like Python or C++, is essential."
+        },
+        {
+          "id": 12,
+          "start": 39.42,
+          "end": 44.52,
+          "text": "Also, having a good understanding of signal processing and machine learning concepts is crucial."
+        }
+      ]
+    }
+  }
+]

@@ -1,19 +1,35 @@
 #!/bin/bash
 set -e
 
-export CUDA_VISIBLE_DEVICES=1
+export CUDA_VISIBLE_DEVICES=4
 
-if [ "$#" -ne 3 ]; then
-    echo "Usage: $0 <article.pdf> <author_image.png> <author_reference.wav>"
+if [ "$#" -ne 6 ]; then
+    echo "Usage: $0 <article.pdf> <author_image.png> <author_reference.wav> <audience> <title> <author_name>"
     exit 1
 fi
 
 ARTICLE="$1"
 AUTHOR_IMG="$2"
 AUTHOR_REF_AUDIO="$3"
+AUDIENCE="$4"
+TITLE="$5"
+AUTHOR_NAME="$6"
+
 
 
 ANCHOR_REF_AUDIO="assets/anchor.wav"
+
+# Generam bannerul :
+
+conda run -n intro_banner python IntroBanner/generate_intro_banner.py \
+    "$TITLE" \
+    "$AUTHOR_NAME" \
+    "$AUTHOR_IMG"
+
+# Generam videoul de intro :
+
+conda run -n intro_banner python IntroBanner/generate_intro_video.py \
+    "assets/banner_output.jpeg"
 
 
 conda run -n backgrounds python3 remove_background.py \
@@ -30,9 +46,10 @@ AUTHOR_NAME="${AUTHOR_BASENAME%.*}"
 AUTHOR_IMG="assets/${AUTHOR_NAME}.png"
 
 
-conda run -n llama python3 LLM/llama_3-8B.py \
+conda run -n llama python3 LLM/llama_audience.py \
     "$ARTICLE" \
-    "assets/text/"
+    "assets/text/" \
+    "$AUDIENCE"
 
 echo "LLM done"
 
@@ -51,7 +68,7 @@ conda run -n chatterbox python3 TTS/chatterbox/concatenate_audios.py \
     "assets/audio/"
 
 echo "concatenation done"
- 
+
 
 
 conda run -n sadtalker python3 VisualModel/SadTalker/inference.py \
@@ -70,7 +87,7 @@ conda run -n sadtalker python3 VisualModel/SadTalker/inference.py \
     --enhancer gfpgan \
     --result_dir assets/video/ \
     --checkpoint_dir VisualModel/SadTalker/checkpoints \
-    
+
 AUTHOR_VIDEO=$(ls -t assets/video/*.mp4 | head -n 1)
 echo "AUTHOR VIDEO = $AUTHOR_VIDEO"
 
@@ -112,8 +129,22 @@ ffmpeg \
     --font-size 24 \
     --bottom-margin 20
 
-  
+
+
+  conda run -n pdf_images python ImagesSync/extract_pdf_images.py "assets/${ARTICLE_NAME}.pdf"
+
+  echo "extracting images done"
+
+  conda run -n pdf_images python3 ImagesSync/create_images_timestamps.py \
+    assets/subtitles/subtitles.srt \
+    assets/pdf_images
+
+  echo "creating images timestamps done"
+
+
+  conda run -n pdf_images python ImagesSync/add_images.py assets/video/"${ARTICLE_NAME}_podcast_background_subtitles.mp4" assets/pdf_images/images_timestamps.json assets/pdf_images
+
+  echo "video rendered with images"
+
 
 echo "videos done, all being saved to ./assets/video"
-
-
